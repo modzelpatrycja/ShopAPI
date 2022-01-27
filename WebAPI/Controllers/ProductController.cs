@@ -33,7 +33,7 @@ namespace WebAPI.Controllers
         {
             string query = @"
                     select ProductId, ProductName, Price
-                    from dbo.Product
+                    from dbo.Product_tab
                     ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ShopAppCon");
@@ -58,10 +58,10 @@ namespace WebAPI.Controllers
         public JsonResult Post(Product pass)
         {
             string query = @"
-                    insert into dbo.Product 
+                    insert into dbo.Product_tab 
                     (ProductName, Price)
                     values 
-                    ( @ProductName, @Price)
+                    ( @ProductName, @ProductPrice)
                     ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ShopAppCon");
@@ -71,8 +71,9 @@ namespace WebAPI.Controllers
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ProductName", System.Data.SqlDbType.NVarChar).Value = pass.Name;
-                    command.Parameters.AddWithValue("@Price", System.Data.SqlDbType.Float).Value = pass.Price;
+                    command.Parameters.AddWithValue("@ProductPrice", System.Data.SqlDbType.Float).Value = pass.ProductPrice;
+
+                    command.Parameters.AddWithValue("@ProductName", System.Data.SqlDbType.NVarChar).Value = pass.ProductName;
                     reader = command.ExecuteReader();
                     table.Load(reader); ;
 
@@ -88,7 +89,7 @@ namespace WebAPI.Controllers
         public JsonResult Put(Product pass)
         {
             string query = @"
-                    update dbo.Product set 
+                    update dbo.Product_tab set 
                     ProductName = @ProductName
                     , Price = @Price
                     where ProductId = @ProductId
@@ -101,9 +102,9 @@ namespace WebAPI.Controllers
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ProductName", System.Data.SqlDbType.NVarChar).Value = pass.Name;
-                    command.Parameters.AddWithValue("@Price", System.Data.SqlDbType.NVarChar).Value = pass.Price;
-                    command.Parameters.AddWithValue("@ProductId", System.Data.SqlDbType.NVarChar).Value = pass.Id;
+                    command.Parameters.AddWithValue("@ProductName", System.Data.SqlDbType.NVarChar).Value = pass.ProductName;
+                    command.Parameters.AddWithValue("@ProductPrice", System.Data.SqlDbType.Float).Value = pass.ProductPrice;
+                    command.Parameters.AddWithValue("@ProductId", System.Data.SqlDbType.NVarChar).Value = pass.ProductId;
                     reader = command.ExecuteReader();
                     table.Load(reader); ;
 
@@ -119,7 +120,7 @@ namespace WebAPI.Controllers
         public JsonResult Delete(int id)
         {
             string query = @"
-                    delete from dbo.Product
+                    delete from dbo.Product_tab
                     where ProductId = @ProductId
                     ";
             DataTable table = new DataTable();

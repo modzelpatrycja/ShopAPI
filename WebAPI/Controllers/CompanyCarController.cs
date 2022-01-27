@@ -32,7 +32,7 @@ namespace WebAPI.Controllers
         {
             string query = @"
                     select CarId, Brand, Model, CarId, PhotoFile
-                    from dbo.Employee
+                    from dbo.CompanyCar
                     ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ShopAppCon");
@@ -57,7 +57,7 @@ namespace WebAPI.Controllers
         public JsonResult Post(CompanyCar pass)
         {
             string query = @"
-                    insert into dbo.Employee 
+                    insert into dbo.CompanyCar 
                     (Brand, Model, CarId, PhotoFile)
                     values 
                     ( @Brand, @Model, @CarId, @PhotoFile )
@@ -89,9 +89,10 @@ namespace WebAPI.Controllers
         public JsonResult Put(CompanyCar pass)
         {
             string query = @"
-                    update dbo.Employee set 
+                    update dbo.CompanyCar set 
                     Brand = @Brand
                     , Model = @Model
+                    , PhotoFile = @PhotoFile
                     where CarId = @CarId
                     ";
             DataTable table = new DataTable();
@@ -142,7 +143,7 @@ namespace WebAPI.Controllers
         public JsonResult Delete(int id)
         {
             string query = @"
-                    delete from dbo.Employee
+                    delete from dbo.CompanyCar
                     where CarId = @CarId
                     ";
             DataTable table = new DataTable();

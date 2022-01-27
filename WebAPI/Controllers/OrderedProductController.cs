@@ -32,8 +32,8 @@ namespace WebAPI.Controllers
         public JsonResult Get()
         {
             string query = @"
-                    select Id, OrderId, ProductId
-                    from dbo.Product
+                    select OrderedProductId, OrderId, ProductId
+                    from dbo.OrderedProduct
                     ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ShopAppCon");
@@ -58,7 +58,7 @@ namespace WebAPI.Controllers
         public JsonResult Post(OrderedProduct pass)
         {
             string query = @"
-                    insert into dbo.Product 
+                    insert into dbo.OrderedProduct 
                     (OrderId, ProductId)
                     values 
                     ( @OrderId, @ProductId)
@@ -88,7 +88,7 @@ namespace WebAPI.Controllers
         public JsonResult Put(OrderedProduct pass)
         {
             string query = @"
-                    update dbo.Product set 
+                    update dbo.OrderedProduct set 
                     OrderId = @OrderId
                     , ProductId = @ProductId
                     where Id = @OrderedProductId
@@ -119,7 +119,7 @@ namespace WebAPI.Controllers
         public JsonResult Delete(int id)
         {
             string query = @"
-                    delete from dbo.Product
+                    delete from dbo.OrderedProduct
                     where OrderedProductId = @OrderedProductId
                     ";
             DataTable table = new DataTable();

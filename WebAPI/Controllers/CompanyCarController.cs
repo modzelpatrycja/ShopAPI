@@ -31,7 +31,7 @@ namespace WebAPI.Controllers
         public JsonResult Get()
         {
             string query = @"
-                    select CarId, Brand, Model, CarId, PhotoFile
+                    select CarId, Brand, Model, PhotoFile
                     from dbo.CompanyCar
                     ";
             DataTable table = new DataTable();
@@ -58,9 +58,9 @@ namespace WebAPI.Controllers
         {
             string query = @"
                     insert into dbo.CompanyCar 
-                    (Brand, Model, CarId, PhotoFile)
+                    (Brand, Model, PhotoFile)
                     values 
-                    ( @Brand, @Model, @CarId, @PhotoFile )
+                    ( @Brand, @Model, @PhotoFile )
                     ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ShopAppCon");
@@ -72,8 +72,16 @@ namespace WebAPI.Controllers
                 {
                     command.Parameters.AddWithValue("@Brand", System.Data.SqlDbType.NVarChar).Value = pass.Brand;
                     command.Parameters.AddWithValue("@Model", System.Data.SqlDbType.NVarChar).Value = pass.Model;
-                    command.Parameters.AddWithValue("@CarId", System.Data.SqlDbType.NVarChar).Value = pass.CarId;
-                    command.Parameters.AddWithValue("@PhotoFile", System.Data.SqlDbType.NVarChar).Value = pass.PhotoFile;
+
+                    if (string.IsNullOrEmpty(pass.PhotoFile))
+                    {
+                        command.Parameters.AddWithValue("@PhotoFile", DBNull.Value);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@PhotoFile", pass.PhotoFile);
+                    }
+                 //   command.Parameters.AddWithValue("@PhotoFile", System.Data.SqlDbType.NVarChar).Value = pass.PhotoFile;
                     reader = command.ExecuteReader();
                     table.Load(reader); ;
 
@@ -105,7 +113,6 @@ namespace WebAPI.Controllers
                 {
                     command.Parameters.AddWithValue("@Brand", System.Data.SqlDbType.NVarChar).Value = pass.Brand;
                     command.Parameters.AddWithValue("@Model", System.Data.SqlDbType.NVarChar).Value = pass.Model;
-                    command.Parameters.AddWithValue("@CarId", System.Data.SqlDbType.NVarChar).Value = pass.CarId;
                     command.Parameters.AddWithValue("@PhotoFile", System.Data.SqlDbType.NVarChar).Value = pass.PhotoFile;
 
                     reader = command.ExecuteReader();
@@ -126,7 +133,7 @@ namespace WebAPI.Controllers
                 var httpRequest = Request.Form;
                 var postedFile = httpRequest.Files[0];
                 string filename = postedFile.FileName;
-                var physicalPath = _env.ContentRootPath + "/PhotoFiles/" + filename;
+                var physicalPath = _env.ContentRootPath + "/Photos/" + filename;
 
                 using (var stream = new FileStream(physicalPath, FileMode.Create))
                 {

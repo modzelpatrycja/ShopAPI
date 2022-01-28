@@ -72,7 +72,7 @@ namespace WebAPI.Controllers
                 {
                     command.Parameters.AddWithValue("@EmployeeName", System.Data.SqlDbType.NVarChar).Value = pass.EmployeeName;
                     command.Parameters.AddWithValue("@EmployeeLastName", System.Data.SqlDbType.NVarChar).Value = pass.EmployeeLastName;
-                    command.Parameters.AddWithValue("@CarId", System.Data.SqlDbType.NVarChar).Value = pass.CompanyCarId;
+                    command.Parameters.AddWithValue("@CarId", System.Data.SqlDbType.NVarChar).Value = pass.CarId;
                     reader = command.ExecuteReader();
                     table.Load(reader); ;
 
@@ -104,7 +104,7 @@ namespace WebAPI.Controllers
                 {
                     command.Parameters.AddWithValue("@EmployeeName", System.Data.SqlDbType.NVarChar).Value = pass.EmployeeName;
                     command.Parameters.AddWithValue("@EmployeeLastName", System.Data.SqlDbType.NVarChar).Value = pass.EmployeeLastName;
-                    command.Parameters.AddWithValue("@CarId", System.Data.SqlDbType.NVarChar).Value = pass.CompanyCarId;
+                    command.Parameters.AddWithValue("@CarId", System.Data.SqlDbType.NVarChar).Value = pass.CarId;
                     command.Parameters.AddWithValue("@EmployeeId", System.Data.SqlDbType.NVarChar).Value = pass.EmployeeId;
                     reader = command.ExecuteReader();
                     table.Load(reader); ;

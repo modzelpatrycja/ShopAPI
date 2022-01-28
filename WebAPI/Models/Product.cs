@@ -10,6 +10,6 @@ namespace Sklep.Core.Domain
 
         public string ProductName { get; set; }
 
-        public float ProductPrice { get; set; }
+        public string Price { get; set; }
     }
 }

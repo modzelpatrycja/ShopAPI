@@ -80,7 +80,7 @@ namespace WebAPI.Controllers
                     connection.Close();
                 }
             }
-            return new JsonResult("Added Successfully");
+            return new JsonResult("Added");
         }
 
 
@@ -111,7 +111,7 @@ namespace WebAPI.Controllers
                     connection.Close();
                 }
             }
-            return new JsonResult("Updated Successfully");
+            return new JsonResult("Updated");
         }
 
 
@@ -138,7 +138,7 @@ namespace WebAPI.Controllers
                     connection.Close();
                 }
             }
-            return new JsonResult("Deleted Successfully");
+            return new JsonResult("Deleted");
         }
     }
 }

@@ -33,7 +33,7 @@ namespace WebAPI.Controllers
         {
             string query = @"
                     select ProductId, ProductName, Price
-                    from dbo.Product_tab
+                    from dbo.Product_table
                     ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ShopAppCon");
@@ -58,10 +58,10 @@ namespace WebAPI.Controllers
         public JsonResult Post(Product pass)
         {
             string query = @"
-                    insert into dbo.Product_tab 
+                    insert into dbo.Product_table 
                     (ProductName, Price)
                     values 
-                    ( @ProductName, @ProductPrice)
+                    ( @ProductName, @Price)
                     ";
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("ShopAppCon");
@@ -71,7 +71,7 @@ namespace WebAPI.Controllers
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@ProductPrice", System.Data.SqlDbType.Float).Value = pass.ProductPrice;
+                    command.Parameters.AddWithValue("@Price", System.Data.SqlDbType.Float).Value = pass.Price;
 
                     command.Parameters.AddWithValue("@ProductName", System.Data.SqlDbType.NVarChar).Value = pass.ProductName;
                     reader = command.ExecuteReader();
@@ -89,7 +89,7 @@ namespace WebAPI.Controllers
         public JsonResult Put(Product pass)
         {
             string query = @"
-                    update dbo.Product_tab set 
+                    update dbo.Product_table set 
                     ProductName = @ProductName
                     , Price = @Price
                     where ProductId = @ProductId
@@ -103,8 +103,16 @@ namespace WebAPI.Controllers
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@ProductName", System.Data.SqlDbType.NVarChar).Value = pass.ProductName;
-                    command.Parameters.AddWithValue("@ProductPrice", System.Data.SqlDbType.Float).Value = pass.ProductPrice;
                     command.Parameters.AddWithValue("@ProductId", System.Data.SqlDbType.NVarChar).Value = pass.ProductId;
+
+                    if (string.IsNullOrEmpty(pass.Price))
+                    {
+                        command.Parameters.AddWithValue("@Price", DBNull.Value);
+                    }
+                    else
+                    {
+                        command.Parameters.AddWithValue("@Price", System.Data.SqlDbType.NVarChar).Value = pass.Price;
+                    }
                     reader = command.ExecuteReader();
                     table.Load(reader); ;
 
@@ -120,7 +128,7 @@ namespace WebAPI.Controllers
         public JsonResult Delete(int id)
         {
             string query = @"
-                    delete from dbo.Product_tab
+                    delete from dbo.Product_table
                     where ProductId = @ProductId
                     ";
             DataTable table = new DataTable();

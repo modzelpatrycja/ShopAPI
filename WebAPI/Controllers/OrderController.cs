@@ -1,26 +1,28 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System.Data.SqlClient;
+
 using System.Data;
 using WebAPI.Models;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Sklep.Core.Domain;
+using System.Data.SqlClient;
 
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PasswordController : ControllerBase
+    public class OrderController : ControllerBase
     {
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _env;
 
-        public PasswordController(IConfiguration configuration, IWebHostEnvironment env)
+        public OrderController(IConfiguration configuration, IWebHostEnvironment env)
         {
             _configuration = configuration;
             _env = env;
@@ -30,11 +32,11 @@ namespace WebAPI.Controllers
         public JsonResult Get()
         {
             string query = @"
-                    select PasswordId, PasswordName, UserId,ServiceName
-                    from dbo.Password
+                    select OrdertId, ClientId
+                    from dbo.Order_tab
                     ";
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("PasswordAppCon");
+            string sqlDataSource = _configuration.GetConnectionString("ShopAppCon");
             SqlDataReader reader;
             using (SqlConnection connection = new SqlConnection(sqlDataSource))
             {
@@ -53,25 +55,23 @@ namespace WebAPI.Controllers
 
 
         [HttpPost]
-        public JsonResult Post(Password pass)
+        public JsonResult Post(Order pass)
         {
             string query = @"
-                    insert into dbo.Password 
-                    (PasswordName, UserId, ServiceName)
+                    insert into dbo.Order_tab
+                    (ClientId)
                     values 
-                    ( @passwordName, @userId, @serviceName )
+                    ( @ClientId)
                     ";
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("PasswordAppCon");
+            string sqlDataSource = _configuration.GetConnectionString("ShopAppCon");
             SqlDataReader reader;
             using (SqlConnection connection = new SqlConnection(sqlDataSource))
             {
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@passwordName", System.Data.SqlDbType.NVarChar).Value = Encryption.Encrypt(pass.PasswordName);
-                    command.Parameters.AddWithValue("@userId", System.Data.SqlDbType.NVarChar).Value = pass.UserId;
-                    command.Parameters.AddWithValue("@serviceName", System.Data.SqlDbType.NVarChar).Value = Encryption.Encrypt(pass.ServiceName);
+                    command.Parameters.AddWithValue("@ClientId", System.Data.SqlDbType.NVarChar).Value = pass.ClientId;
                     reader = command.ExecuteReader();
                     table.Load(reader); ;
 
@@ -79,32 +79,28 @@ namespace WebAPI.Controllers
                     connection.Close();
                 }
             }
-            return new JsonResult("Added Successfully");
+            return new JsonResult("Added");
         }
 
 
         [HttpPut]
-        public JsonResult Put(Password pass)
+        public JsonResult Put(Order pass)
         {
             string query = @"
-                    update dbo.Password set 
-                    PasswordName = @passwordName
-                    , UserId = @userId
-                    ,ServiceName = @passwordId
-                    where PasswordId = @passwordId
+                    update dbo.Order_tab set 
+                    ClientId = @ClientId
+                    where OrdertId = @OrdertId
                     ";
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("PasswordAppCon");
+            string sqlDataSource = _configuration.GetConnectionString("ShopAppCon");
             SqlDataReader reader;
             using (SqlConnection connection = new SqlConnection(sqlDataSource))
             {
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@passwordName", System.Data.SqlDbType.NVarChar).Value = Encryption.Encrypt(pass.PasswordName);
-                    command.Parameters.AddWithValue("@userId", System.Data.SqlDbType.NVarChar).Value = pass.UserId;
-                    command.Parameters.AddWithValue("@serviceName", System.Data.SqlDbType.NVarChar).Value = Encryption.Encrypt(pass.ServiceName);
-                    command.Parameters.AddWithValue("@passwordId", System.Data.SqlDbType.NVarChar).Value = pass.PasswordId;
+                    command.Parameters.AddWithValue("@ClientId", System.Data.SqlDbType.NVarChar).Value = pass.ClientId;
+
                     reader = command.ExecuteReader();
                     table.Load(reader); ;
 
@@ -112,7 +108,7 @@ namespace WebAPI.Controllers
                     connection.Close();
                 }
             }
-            return new JsonResult("Updated Successfully");
+            return new JsonResult("Updated");
         }
 
 
@@ -120,18 +116,18 @@ namespace WebAPI.Controllers
         public JsonResult Delete(int id)
         {
             string query = @"
-                    delete from dbo.Password
-                    where PasswordId = @passwordId
+                    delete from dbo.Order_tab
+                    where OrdertId = @OrdertId
                     ";
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("PasswordAppCon");
+            string sqlDataSource = _configuration.GetConnectionString("ShopAppCon");
             SqlDataReader reader;
             using (SqlConnection connection = new SqlConnection(sqlDataSource))
             {
                 connection.Open();
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@passwordId", System.Data.SqlDbType.NVarChar).Value = id;
+                    command.Parameters.AddWithValue("@OrdertId", System.Data.SqlDbType.NVarChar).Value = id;
                     reader = command.ExecuteReader();
                     table.Load(reader); ;
 
@@ -139,7 +135,8 @@ namespace WebAPI.Controllers
                     connection.Close();
                 }
             }
-            return new JsonResult("Deleted Successfully");
+            return new JsonResult("Deleted");
         }
     }
-}*/
+}
+

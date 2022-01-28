@@ -12,6 +12,6 @@ namespace Sklep.Core.Domain
 
         public string EmployeeLastName { get; set; }
 
-        public int CompanyCarId { get; set; }
+        public string CarId { get; set; }
     }
 }
